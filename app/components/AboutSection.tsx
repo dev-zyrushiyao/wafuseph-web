@@ -51,6 +51,8 @@ export default function AboutSection() {
               flexDirection: isIndexEven ? "row" : "row-reverse",
             });
 
+            //put outside the elements
+            //left-item <- [inside] [inside] -> right item
             gsap.set(elements, {
               xPercent: isIndexEven
                 ? gsap.utils.wrap([-100, 100])
@@ -84,7 +86,11 @@ export default function AboutSection() {
       className="about min-h-dvh w-full bg-surface lg:p-20 p-10 overflow-hidden"
     >
       <div className="flex flex-col lg:gap-10 gap-5 justify-start items-start">
-        <h3>About me</h3>
+        <div className="title wrapper w-fit">
+          <h6 className="text-end text-xl">V-tuber インフォメーション</h6>
+          <h3>About me</h3>
+        </div>
+
         {Array.from({ length: 2 }, (_, index) => {
           return (
             <div

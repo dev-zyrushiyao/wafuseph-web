@@ -3,7 +3,11 @@ import React from "react";
 export default function ScheduleSection() {
   return (
     <section className="schedule w-full bg-secondary p-20">
-      <h2>Schedule</h2>
+      <div className="title-wrapper w-fit">
+        <h6 className="text-end text-xl">スケジュール</h6>
+        <h2>Schedule</h2>
+      </div>
+
       <div>
         <ul className="flex flex-col lg:gap-20 p-10">
           {Array.from({ length: 5 }, (_, index) => {

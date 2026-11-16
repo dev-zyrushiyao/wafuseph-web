@@ -16,7 +16,7 @@ export default function Footer() {
         </div>
       </div>
 
-      <div className="icons-wrapper w-100 flex flex-col items-center gap-5">
+      <div className="icons-wrapper w-100 flex flex-col items-center justify-end gap-2">
         <span className="text-white text-2xl">Follow me</span>
         <div className="flex flex-row gap-5 items-center text-white">
           <div className="hover:bg-[#9146ff] p-2 rounded-xs">

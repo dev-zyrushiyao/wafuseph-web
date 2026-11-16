@@ -94,7 +94,7 @@ export default function Carousel() {
   return (
     <div
       ref={container}
-      className="carousel h-[clamp(200px,300px,20vw)] lg:w-150 min-w-75 w-full border-2 rounded-2xl relative  inset-0 lg:left-full lg:top-50 lg:-translate-x-160 overflow-hidden"
+      className="carousel h-[clamp(200px,300px,30vw)] lg:w-150 md:w-100 w-full border-2 rounded-2xl relative  inset-0 lg:left-full lg:top-50 lg:-translate-x-160 overflow-hidden"
     >
       <div className="image-wrapper flex flex-row h-full w-full">
         {Array.from({ length: 4 }, (_, index) => {
