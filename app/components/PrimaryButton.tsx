@@ -1,0 +1,44 @@
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import React, { useRef } from "react";
+
+type ButtonProps = { label: string; onClick?: () => void };
+
+export default function PrimaryButton({ label, onClick }: ButtonProps) {
+  const container = useRef<HTMLDivElement | null>(null);
+  useGSAP(() => {
+    gsap.set(container.current, { opacity: 1 });
+
+    const hoverBox = container.current?.querySelector(".hover-box");
+    const buttonLabel = container.current?.querySelector(".button-label");
+    if (!hoverBox || !buttonLabel) return;
+
+    const tl = gsap.timeline({ paused: true });
+    tl.from(hoverBox, { duration: 0.5, scale: 0, ease: "power2" });
+    tl.to(hoverBox, { y: -80, ease: "power4" }, "<");
+    tl.to(buttonLabel, { color: "white" }, "<");
+
+    const button = container.current?.querySelector("button");
+    button?.addEventListener("mouseenter", () => {
+      tl.play();
+    });
+    button?.addEventListener("mouseleave", () => {
+      tl.reverse();
+    });
+  });
+
+  return (
+    <div ref={container} className="opacity-0">
+      <button
+        type="submit"
+        className="border-2 h-20 w-50 border-border-color rounded-lg  bg-none relative overflow-hidden"
+        onClick={onClick}
+      >
+        <span className="button-label text-xl text-primary-text z-10 relative">
+          {label}
+        </span>
+        <div className="hover-box h-20 w-full rounded-4xl bg-primary-hover absolute inset-0 top-full scale-120"></div>
+      </button>
+    </div>
+  );
+}

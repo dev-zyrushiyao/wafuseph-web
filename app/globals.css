@@ -8,8 +8,83 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-montserrat) --font-serif: var(--font-crimson-text);
+
+  /* design system */
+  --color-primary: #c0753b;
+  --color-primary-hover: #cc7d47;
+  --color-border-color: #cc7d47;
+  --color-secondary: #eaae4e;
+  --color-surface: #f3c173;
+  --color-primary-text: #3d200a;
+}
+
+@layer base {
+  h1 {
+    @apply font-sans font-bold lg:text-9xl md:text-7xl text-5xl text-primary-text;
+  }
+
+  h2 {
+    @apply font-sans font-semibold lg:text-8xl md:text-6xl text-4xl text-primary-text;
+  }
+
+  h3 {
+    @apply font-sans font-semibold lg:text-7xl md:text-5xl text-3xl text-primary-text;
+  }
+
+  h4 {
+    @apply font-sans font-semibold lg:text-6xl md:text-4xl text-2xl text-primary-text;
+  }
+
+  h5 {
+    @apply font-sans font-semibold lg:text-5xl md:text-3xl text-xl text-primary-text;
+  }
+
+  h6 {
+    @apply font-sans font-semibold lg:text-4xl md:text-2xl text-lg text-primary-text;
+  }
+
+  li {
+    @apply text-3xl tracking-wide text-primary-text;
+  }
+
+  p {
+    @apply font-serif lg:text-2xl md:text-xl text-base leading-8 tracking-wide text-primary-text;
+  }
+
+  label {
+    @apply font-sans text-xl;
+  }
+
+  input {
+    @apply font-serif rounded-sm py-3 px-4 bg-amber-100 border-2  border-primary-text hover:border-primary-hover focus:outline-none focus-visible:outline-2 focus-visible:outline-primary;
+  }
+
+  textarea {
+    @apply bg-amber-100 p-2 font-serif rounded-sm border-2 border-primary-text hover:border-primary-hover focus:outline-none focus-visible:outline-2 focus-visible:outline-primary;
+  }
+}
+
+@layer components {
+  .vtuber-name.grid-state {
+    @apply grid grid-cols-4 grid-rows-2 h-full w-full;
+  }
+
+  .vtuber-name.grid-row-state {
+    @apply grid grid-cols-8 grid-rows-1 h-full w-full;
+  }
+
+  .vtuber-name.flex-state {
+    @apply flex flex-row justify-center items-center h-full w-full;
+  }
+
+  .vtuber-name > .flip-active {
+    @apply flex flex-col justify-center w-full h-full items-center;
+  }
+
+  .vtuber-name > .flip-inactive {
+    @apply flex flex-col justify-center w-10 h-full items-center;
+  }
 }
 
 @media (prefers-color-scheme: dark) {
