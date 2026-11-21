@@ -2,9 +2,13 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import React, { useRef } from "react";
 
-type ButtonProps = { label: string; onClick?: () => void };
+type ButtonProps = { label: string; disabled?: boolean; onClick?: () => void };
 
-export default function PrimaryButton({ label, onClick }: ButtonProps) {
+export default function PrimaryButton({
+  label,
+  disabled = false,
+  onClick,
+}: ButtonProps) {
   const container = useRef<HTMLDivElement | null>(null);
   useGSAP(() => {
     gsap.set(container.current, { opacity: 1 });
@@ -31,6 +35,7 @@ export default function PrimaryButton({ label, onClick }: ButtonProps) {
     <div ref={container} className="opacity-0">
       <button
         type="submit"
+        disabled={disabled}
         className="border-2 h-20 w-50 border-border-color rounded-lg  bg-none relative overflow-hidden"
         onClick={onClick}
       >

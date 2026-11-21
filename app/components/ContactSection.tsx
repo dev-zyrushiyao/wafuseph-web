@@ -1,23 +1,60 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import PrimaryButton from "./PrimaryButton";
 
-type FormValues = {
-  name: string;
+type ContactFormProp = {
+  senderName: string;
   email: string;
   message: string;
 };
 
+type Validation = Partial<Record<keyof ContactFormProp, string>>;
+type ContactStatus = { contactStatus: string };
+
 export default function ContactSection() {
+  const [subMissionResult, setSubMissionResult] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
-  } = useForm<FormValues>({
-    defaultValues: { email: "" },
-  });
+    setError,
+    reset,
+    formState: { isSubmitting, errors },
+  } = useForm<ContactFormProp>();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<ContactFormProp> = async (data) => {
+    const res = await fetch("http://localhost:8080/api/contact/inquiry", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
+
+    if (res.status === 409) {
+      const errorBody = (await res.json()) as ContactStatus;
+
+      setSubMissionResult(errorBody.contactStatus);
+      return;
+    }
+
+    if (!res.ok) {
+      const errorBody = (await res.json()) as Validation;
+      Object.entries(errorBody).forEach(([field, message]) => {
+        if (message) {
+          setError(field as keyof ContactFormProp, { type: "server", message });
+        }
+      });
+
+      return;
+    }
+
+    const successBody = (await res.json()) as ContactStatus;
+    setSubMissionResult(successBody.contactStatus);
+
+    await alert("Message sent to Waffles");
+    reset();
+  };
 
   return (
     <section className="contact min-h-dvh/2 w-full bg-gray-200 p-20 flex flex-col items-center">
@@ -33,8 +70,8 @@ export default function ContactSection() {
             <input
               id="email"
               type="email"
-              aria-invalid={errors.email ? "true" : "false"}
-              {...register("email", { required: "Email is required" })}
+              // aria-invalid={errors.email ? "true" : "false"}
+              {...register("email")}
             />
             {errors.email && (
               <p role="alert" className="text-red-500 text-base">
@@ -44,16 +81,16 @@ export default function ContactSection() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label htmlFor="email">Name</label>
+            <label htmlFor="senderName">Name</label>
             <input
-              id="name"
+              id="senderName"
               type="text"
-              aria-invalid={errors.name ? "true" : "false"}
-              {...register("name", { required: "Name is required" })}
+              // aria-invalid={errors.senderName ? "true" : "false"}
+              {...register("senderName")}
             />
-            {errors.name && (
+            {errors.senderName && (
               <p role="alert" className="text-red-500 text-base">
-                {errors.name.message}
+                {errors.senderName.message}
               </p>
             )}
           </div>
@@ -62,8 +99,7 @@ export default function ContactSection() {
             <label htmlFor="message">Message</label>
             <textarea
               id="message"
-              aria-invalid={errors.message ? "true" : "false"}
-              {...register("message", { required: "message is required" })}
+              {...register("message")}
               rows={5}
               cols={33}
               maxLength={500}
@@ -76,7 +112,7 @@ export default function ContactSection() {
           </div>
 
           <div className="flex flex-row justify-center">
-            <PrimaryButton label="Submit" />
+            <PrimaryButton disabled={isSubmitting} label={`Submit`} />
           </div>
         </form>
       </div>
