@@ -4,26 +4,33 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Flip } from "gsap/Flip";
 import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import HeroSection from "./components/HeroSection";
 import AboutSection from "./components/AboutSection";
 import ScheduleSection from "./components/ScheduleSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 
-import { GiHamburgerMenu } from "react-icons/gi";
 import MobileNav from "./components/MobileNav";
 import DesktopNav from "./components/DesktopNav";
+import { useIntroStore } from "./store/introStore";
 
 gsap.registerPlugin(Flip, ScrambleTextPlugin, useGSAP);
 
-//vise-versa color distribution (flip state animation)
-const primaryColor: string = "black";
-const secondaryColor: string = "gray";
-
 export default function Home() {
-  //state
-  const [loading, setLoading] = useState<boolean>(true);
+  //state-store default: false
+  const hasPlayedIntro = useIntroStore(
+    (state) => state.hasPlayedIntro,
+  );
+  const updateHasPlayedIntroState = useIntroStore(
+    (state) => state.updateHasPlayedIntroState,
+  );
+  const hasFadedInContent = useIntroStore(
+    (state) => state.hasFadedInContent,
+  );
+  const updateHasFadedInContentState = useIntroStore(
+    (state) => state.updateHasFadedInContentState,
+  );
 
   //animation
   const container = useRef<HTMLDivElement | null>(null);
@@ -37,17 +44,22 @@ export default function Home() {
       const charChild = vtuberName.querySelectorAll('div[class*="char-"]');
       if (!charChild.length) return;
 
+      //cancel the rest of the animation so it won't replay again but leave the opacity 1 to load the container
+      if (hasPlayedIntro) return;
+
       const tl = gsap.timeline({
         delay: 1,
         onComplete: () => {
           setTimeout(async () => {
-            gsap.to(vtuberName, { autoAlpha: 0, display: "none" });
-
-            await gsap.from(document.body, {
-              backgroundColor: "white",
+            //fade in animation
+            //hide - fade the vtuberName
+            await gsap.timeline().to([vtuberName], {
+              duration: 0.5,
+              autoAlpha: 0,
             });
 
-            await setLoading(false);
+            // updatePartialAnimationState();
+            updateHasPlayedIntroState();
           }, 1000);
         },
       });
@@ -110,23 +122,42 @@ export default function Home() {
         );
       });
     },
-    { scope: container },
+    {
+      scope: container,
+      dependencies: [hasPlayedIntro],
+    },
   );
 
   useGSAP(
     () => {
-      if (loading) return;
+      //this executes after finishing the animation (first useGsap-flip animation)
 
-      console.log("fade in animation");
-      //fade-in animation
-      gsap.from(document.body, {
-        duration: 0.5,
-        opacity: 0,
-        backgroundColor: "transparent",
-        ease: "power1.inOut",
-      });
+      //zustard state (introStore.ts) conditional
+      //once the fade-out finish animating it will flip the hasFadedInContent
+      //this is to disable the fade-out animation
+      if (!hasPlayedIntro) return;
+      if (hasFadedInContent) return;
+
+      const mainContent = container.current?.querySelector(".main-content");
+      if (!mainContent) return;
+
+      //fade-out animation
+      gsap
+        .timeline({
+          onComplete: () => {
+            updateHasFadedInContentState();
+          },
+        })
+        .from(mainContent, {
+          autoAlpha: 0,
+          duration: 1,
+          ease: "power1.inOut",
+        });
     },
-    { scope: container, dependencies: [loading] },
+    {
+      scope: container,
+      dependencies: [hasPlayedIntro],
+    },
   );
 
   return (
@@ -134,7 +165,7 @@ export default function Home() {
       ref={container}
       className=" flex flex-col justify-center items-center opacity-0"
     >
-      {loading && (
+      {!hasPlayedIntro && (
         // intro animation
         <div className="vtuber-name h-dvh w-full flex-state font-sans text-5xl bg-amber-300 overflow-hidden">
           <div className="char-w flip-inactive ">W</div>
@@ -148,8 +179,8 @@ export default function Home() {
         </div>
       )}
 
-      {!loading && (
-        <main className="content h-full w-full">
+      {hasPlayedIntro && (
+        <main className="main-content h-full w-full">
           {/* added Navibar inside the home page - to avoid appearing while the intro animation is playing*/}
           <DesktopNav />
           <MobileNav />

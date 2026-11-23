@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+
 import { useForm, type SubmitHandler } from "react-hook-form";
 import PrimaryButton from "./PrimaryButton";
 
@@ -9,11 +9,11 @@ type ContactFormProp = {
 };
 
 type Validation = Partial<Record<keyof ContactFormProp, string>>;
+
+//spring boot response entity return (controller)
 type ContactStatus = { contactStatus: string };
 
 export default function ContactSection() {
-  const [subMissionResult, setSubMissionResult] = useState<string | null>(null);
-
   const {
     register,
     handleSubmit,
@@ -34,7 +34,7 @@ export default function ContactSection() {
     if (res.status === 409) {
       const errorBody = (await res.json()) as ContactStatus;
 
-      setSubMissionResult(errorBody.contactStatus);
+      alert(errorBody.contactStatus);
       return;
     }
 
@@ -50,9 +50,7 @@ export default function ContactSection() {
     }
 
     const successBody = (await res.json()) as ContactStatus;
-    setSubMissionResult(successBody.contactStatus);
-
-    await alert("Message sent to Waffles");
+    await alert(successBody.contactStatus);
     reset();
   };
 
