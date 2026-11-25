@@ -1,3 +1,4 @@
+"use client";
 
 import { useForm, type SubmitHandler } from "react-hook-form";
 import PrimaryButton from "./PrimaryButton";
@@ -55,7 +56,10 @@ export default function ContactSection() {
   };
 
   return (
-    <section className="contact min-h-dvh/2 w-full bg-gray-200 p-20 flex flex-col items-center">
+    <section
+      id="contact"
+      className="contact min-h-dvh/2 w-full bg-gray-200 p-20 flex flex-col items-center"
+    >
       <div className="min-w-100">
         <h2>Contact me</h2>
 

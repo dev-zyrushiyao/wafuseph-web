@@ -31,14 +31,10 @@ export async function getAnnouncements() {
   if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
 
   const announcements = (await res.json()) as AnnouncementProp[];
-  return announcements;
+  return announcements || [];
 }
 
 export async function getSlugAnnouncement(slug: string) {
-  "use cache";
-  cacheLife("weeks");
-  cacheTag("slugAnnouncements");
-
   const res = await fetch(
     `http://localhost:8080/api/visitor/view/announcements/${slug}`,
     {
@@ -46,9 +42,11 @@ export async function getSlugAnnouncement(slug: string) {
       headers: {
         "Content-Type": "application/json",
       },
+      cache: "no-store",
     },
   );
 
+  if (res.status === 404) return null;
   if (!res.ok) throw new Error(`HTTP error: ${res.status}`);
 
   const announcements = (await res.json()) as AnnouncementProp;

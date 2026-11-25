@@ -2,7 +2,7 @@ import React from "react";
 
 export default function ScheduleSection() {
   return (
-    <section className="schedule w-full bg-secondary p-20">
+    <section id="schedule" className="schedule w-full bg-secondary p-20">
       <div className="title-wrapper w-fit">
         <h6 className="text-end text-xl">スケジュール</h6>
         <h2>Schedule</h2>

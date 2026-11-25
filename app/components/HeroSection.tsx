@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef } from "react";
 import Carousel from "./Carousel";
 import heroBg from "@/public/hero-bg.jpg";
@@ -51,6 +53,7 @@ export default function HeroSection() {
 
   return (
     <section
+      id="home"
       className={`hero  min-h-dvh w-full p-20 relative overflow-hidden lg:block flex flex-col justify-center items-center`}
       style={{
         backgroundImage: `url(${heroBg.src})`,

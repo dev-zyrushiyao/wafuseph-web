@@ -1,12 +1,12 @@
 type Link = {
-  menu: string;
+  title: string;
   link: string;
 };
 
 export const navMenu: Link[] = [
-  { menu: "Home", link: "/" },
-  { menu: "Announcements", link: "/" },
-  { menu: "Schedule", link: "/" },
-  { menu: "Contact", link: "/" },
-  { menu: "About", link: "/" },
+  { title: "Home", link: "/#home" },
+  { title: "Announcements", link: "/announcements" },
+  { title: "Schedule", link: "/#schedule" },
+  { title: "Contact", link: "/#contact" },
+  { title: "About", link: "/#about" },
 ];

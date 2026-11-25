@@ -4,16 +4,17 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { Flip } from "gsap/Flip";
 import ScrambleTextPlugin from "gsap/ScrambleTextPlugin";
-import { useRef } from "react";
+
 import HeroSection from "./components/HeroSection";
 import AboutSection from "./components/AboutSection";
 import ScheduleSection from "./components/ScheduleSection";
 import ContactSection from "./components/ContactSection";
-import Footer from "./components/Footer";
 
 import MobileNav from "./components/MobileNav";
 import DesktopHomeNav from "./components/DesktopHomeNav";
 import { useIntroStore } from "./store/introStore";
+import { useRef } from "react";
+import Footer from "./components/Footer";
 
 gsap.registerPlugin(Flip, ScrambleTextPlugin, useGSAP);
 

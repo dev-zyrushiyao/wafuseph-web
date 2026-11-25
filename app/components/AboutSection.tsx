@@ -118,6 +118,7 @@ export default function AboutSection() {
 
   return (
     <section
+      id="about"
       ref={container}
       className="about min-h-dvh w-full bg-surface lg:p-20 p-10 overflow-hidden"
     >
