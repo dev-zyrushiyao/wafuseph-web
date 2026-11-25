@@ -23,7 +23,11 @@ export default function Carousel() {
     async function fetchAnnouncements() {
       const data = await getAnnouncements();
 
-      const latestAnnouncements = data.slice(0, 4);
+      const filteredWithPhoto = data.filter(
+        (annon) => annon.imageUrl != null && annon.imageUrl !== "",
+      );
+
+      const latestAnnouncements = filteredWithPhoto.slice(0, 4);
       setAnnouncements(latestAnnouncements);
     }
 
@@ -149,7 +153,7 @@ export default function Carousel() {
   return (
     <div
       ref={container}
-      className="carousel h-[clamp(200px,300px,30vw)] lg:w-150 md:w-100 w-full border-2 rounded-2xl relative  inset-0 lg:left-full lg:top-50 lg:-translate-x-160 overflow-hidden"
+      className="carousel h-[clamp(250px,300px,40vw)] lg:w-150 md:w-100 w-full border-2 rounded-2xl relative  inset-0 lg:left-full lg:top-50 lg:-translate-x-160 overflow-hidden"
     >
       <div className="image-wrapper flex flex-row h-full w-full">
         {announcements !== null && announcements.length
@@ -160,7 +164,7 @@ export default function Carousel() {
                   href={`/announcements/${announ.slug}`}
                   className="shrink-0 h-full w-full cursor-pointer"
                 >
-                  <div className="image-cont h-full w-full bg-gray-300 relative">
+                  <div className="image-cont h-75 w-auto bg-gray-300 relative">
                     {/* h-[296px] w-[596px] */}
                     {/* sizes="(max-width: 768px) 100vw, 596px" */}
                     <Image
@@ -169,6 +173,7 @@ export default function Carousel() {
                       sizes="596px"
                       fill
                       loading="eager"
+                      className="h-full w-full object-cover"
                     />
                   </div>
                 </Link>

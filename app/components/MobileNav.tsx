@@ -5,6 +5,7 @@ import gsap from "gsap";
 import React, { useRef, useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { IoClose } from "react-icons/io5";
+import { navMenu } from "../constants/navMenu";
 
 export default function MobileNav() {
   const container = useRef<HTMLDivElement | null>(null);
@@ -72,11 +73,10 @@ export default function MobileNav() {
       </nav>
       <div className="flex flex-row relative">
         <div className="mobile-menu h-dvh w-70 bg-secondary absolute left-full inset-0 p-10 z-20 ">
-          <ul className="flex flex-col gap-10 justify-center items-center h-150">
-            <li className="">Test</li>
-            <li>Test</li>
-            <li>Test</li>
-            <li>Test</li>
+          <ul className="flex flex-col gap-10 justify-center items-start h-150">
+            {navMenu.map((item) => {
+              return <li key={item.menu}>{item.menu}</li>;
+            })}
           </ul>
         </div>
         <div

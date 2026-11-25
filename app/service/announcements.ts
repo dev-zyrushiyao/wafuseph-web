@@ -5,7 +5,7 @@ import { cacheLife, cacheTag } from "next/cache";
 export type AnnouncementProp = {
   id: string;
   content: string;
-  createdAt: Date;
+  createdAt: string | Date;
   imageUrl: string;
   slug: string;
   subTitle: string;

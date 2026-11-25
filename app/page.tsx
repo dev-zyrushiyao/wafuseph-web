@@ -12,22 +12,18 @@ import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 
 import MobileNav from "./components/MobileNav";
-import DesktopNav from "./components/DesktopNav";
+import DesktopHomeNav from "./components/DesktopHomeNav";
 import { useIntroStore } from "./store/introStore";
 
 gsap.registerPlugin(Flip, ScrambleTextPlugin, useGSAP);
 
 export default function Home() {
   //state-store default: false
-  const hasPlayedIntro = useIntroStore(
-    (state) => state.hasPlayedIntro,
-  );
+  const hasPlayedIntro = useIntroStore((state) => state.hasPlayedIntro);
   const updateHasPlayedIntroState = useIntroStore(
     (state) => state.updateHasPlayedIntroState,
   );
-  const hasFadedInContent = useIntroStore(
-    (state) => state.hasFadedInContent,
-  );
+  const hasFadedInContent = useIntroStore((state) => state.hasFadedInContent);
   const updateHasFadedInContentState = useIntroStore(
     (state) => state.updateHasFadedInContentState,
   );
@@ -48,22 +44,25 @@ export default function Home() {
       if (hasPlayedIntro) return;
 
       const tl = gsap.timeline({
+        id: "Flip and ScrambleText , fade-in animation",
         delay: 1,
         onComplete: () => {
           setTimeout(async () => {
             //fade in animation
+            //do not auto alpha the document.body or container.current (scaffold) to prevent fade not executing
             //hide - fade the vtuberName
             await gsap.timeline().to([vtuberName], {
               duration: 0.5,
               autoAlpha: 0,
             });
 
-            // updatePartialAnimationState();
             updateHasPlayedIntroState();
           }, 1000);
         },
       });
 
+      //Class called here "flex-state" .. etc is manually created in Global.css
+      //please refer to @layer components for the tailwind classes applied for each class state
       tl.add(() => {
         const state = Flip.getState([vtuberName, ...charChild]);
         vtuberName.classList.replace("flex-state", "grid-state");
@@ -112,7 +111,6 @@ export default function Home() {
           {
             duration: 1,
             color: "black",
-
             scrambleText: {
               text: newText[index],
               chars: "upperCase",
@@ -130,12 +128,13 @@ export default function Home() {
 
   useGSAP(
     () => {
-      //this executes after finishing the animation (first useGsap-flip animation)
+      //this executes after finishing the animation (first useGsap: Timeline id: "Flip and ScrambleText , fade-in animation",)
 
       //zustard state (introStore.ts) conditional
-      //once the fade-out finish animating it will flip the hasFadedInContent
-      //this is to disable the fade-out animation
+      //skip this useGsap until the first animation is finished
       if (!hasPlayedIntro) return;
+      //once the fade-out finish animating it will flip the hasFadedInContent
+      //this is to disable the fade-out animation when the Home component re-mounts
       if (hasFadedInContent) return;
 
       const mainContent = container.current?.querySelector(".main-content");
@@ -144,6 +143,7 @@ export default function Home() {
       //fade-out animation
       gsap
         .timeline({
+          id: "fade-out animation",
           onComplete: () => {
             updateHasFadedInContentState();
           },
@@ -182,7 +182,7 @@ export default function Home() {
       {hasPlayedIntro && (
         <main className="main-content h-full w-full">
           {/* added Navibar inside the home page - to avoid appearing while the intro animation is playing*/}
-          <DesktopNav />
+          <DesktopHomeNav />
           <MobileNav />
 
           <HeroSection />

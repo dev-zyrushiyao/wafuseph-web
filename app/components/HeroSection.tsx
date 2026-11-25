@@ -4,16 +4,23 @@ import heroBg from "@/public/hero-bg.jpg";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
+import { useHeroStore } from "../store/heroStore";
 
 gsap.registerPlugin(SplitText);
 
 export default function HeroSection() {
   const container = useRef<HTMLDivElement | null>(null);
 
+  const hasPlayed = useHeroStore((state) => state.hasPlayed);
+  const updateHasPlayed = useHeroStore((state) => state.updateHasPlayed);
+
   useGSAP(
     () => {
       //FUOC
       gsap.set(container.current, { opacity: 1 });
+
+      //when it update to true this will prevent the animation from executing on next component mount
+      if (hasPlayed) return;
 
       const header = container.current?.querySelector("h1");
       const paragraph = container.current?.querySelector("p");
@@ -22,7 +29,10 @@ export default function HeroSection() {
       const splitHead = SplitText.create(header, { type: "chars" });
       const splitPara = SplitText.create(paragraph, { type: "words" });
 
-      const tl = gsap.timeline({});
+      const tl = gsap.timeline({
+        id: "elastic-text",
+        onComplete: updateHasPlayed,
+      });
       tl.from(splitHead.chars, {
         duration: 1,
         stagger: 0.03,
